@@ -3,6 +3,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
+import Searcher from './searcher';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,7 +38,9 @@ function Spotter() {
     return (
         <div>
 
-            <Typography align="center" variant="h5" className={classes.headings}>STATES</Typography>
+            <Typography align="center" variant="h5" className={classes.headings}>A tool to help you track down COVID-19 vaccine appointment openings at health centres near you.</Typography>
+
+            <Searcher />
 
         </div>
     );

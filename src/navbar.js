@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         backgroundColor: "#007bff",
-        color: "black",
+        color: "white",
         fontWeight: "fontWeightBold",
         width: '100%',
         OverflowX: 'hidden'
