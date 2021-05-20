@@ -19,7 +19,12 @@ CallHandler.call=async (opts)=>{
 				}
 	});
 	const response = await fetch(`${SERVER_URL}${opts.path}`, fetchObject);
-	return response.json();
+	if (response.ok){
+		return Promise.resolve(response.json());
+	}
+	else{
+		return Promise.reject(response.json());
+	}
 };
 /**
  * 
@@ -31,79 +36,72 @@ CallHandler.getStates = ()=>{
 };
 /**
  * 
- * @param {*} opts 
- * @param opts.state_id The id returned from getStates
+ * @param state_id The id returned from getStates
  * @returns Promise
  * @description Fetches districts in the state.
  */
-CallHandler.getDistricts = (opts) =>{
-	return CallHandler.call({path:`/v2/admin/location/districts/${opts.state_id}`});
+CallHandler.getDistricts = (state_id) =>{
+	return CallHandler.call({path:`/v2/admin/location/districts/${state_id}`});
 };
 /**
  * 
- * @param {*} opts 
- * @param opts.pincode PIN code
- * @param opts.date Date to search
+ * @param pincode PIN code
+ * @param date Date to search
  * @returns Promise
  * @description Vaccination sessions by PIN
  */
-CallHandler.findCenterByPIN= (opts)=>{
-	return CallHandler.call({path:`api/v2/appointment/sessions/public/findByPin?pincode=${opts.pincode}&date=${opts.date}`});
+CallHandler.findCenterByPIN= (pincode,date)=>{
+	return CallHandler.call({path:`api/v2/appointment/sessions/public/findByPin?pincode=${pincode}&date=${date}`});
 };
 /**
  * 
- * @param {*} opts 
- * @param opts.district_id Id returned from getDistricts
- * @param opts.date Date to search
+ * @param district_id Id returned from getDistricts
+ * @param date Date to search
  * @returns Promise
  * @description Vaccination sessions by district
  */
-CallHandler.findCenterByDistrict=(opts)=>{
-	return CallHandler.call({path:`​api/v2/appointment/sessions/public/findByDistrict?district_id=${opts.district_id}&date=${opts.date}`});
+CallHandler.findCenterByDistrict=(district_id,date)=>{
+	return CallHandler.call({path:`​api/v2/appointment/sessions/public/findByDistrict?district_id=${district_id}&date=${date}`});
 };
 /**
  * 
- * @param {*} opts 
- * @param opts.lat Latitude
- * @param opts.long Longitude
+ * @param lat Latitude
+ * @param long Longitude
  * @returns Promise
  * @description vaccination sessions by Geo Location
  */
-CallHandler.findCenterByGeoLocation = (opts)=>{
-	return CallHandler.call({path:`api/v2/appointment/centers/public/findByLatLong?lat=${opts.lat}&long=${opts.long}`});
+CallHandler.findCenterByGeoLocation = (lat,long)=>{
+	return CallHandler.call({path:`api/v2/appointment/centers/public/findByLatLong?lat=${lat}&long=${long}`});
 };
 /**
  * 
- * @param {\} opts 
- * @param opts.pincode PIN
- * @param opts.date Date to search
+ * @param pincode PIN
+ * @param date Date to search
  * @returns Promise
  * @description Vaccination sessions by PIN for 7 days
  */
-CallHandler.findSessionByPIN = (opts)=>{
-	return CallHandler.call({path:`api/v2/appointment/sessions/public/calendarByPin?pincode=${opts.pincode}&date=${opts.date}`});
+CallHandler.findSessionByPIN = (pincode,date)=>{
+	return CallHandler.call({path:`api/v2/appointment/sessions/public/calendarByPin?pincode=${pincode}&date=${date}`});
 };
 /**
- * 
- * @param {*} opts 
- * @param opts.district_id District id from getDistrict
- * @param opts.date Date to search
+ *  
+ * @param district_id District id from getDistrict
+ * @param date Date to search
  * @returns Promise
  * @description Vaccination sessions by district for 7 days
  */
-CallHandler.findSessionByDistrict = (opts)=>{
-	return CallHandler.call({path:`api/v2/appointment/sessions/public/calendarByDistrict?district_id=${opts.district_id}&date=${opts.date}`});
+CallHandler.findSessionByDistrict = (district_id,date)=>{
+	return CallHandler.call({path:`api/v2/appointment/sessions/public/calendarByDistrict?district_id=${district_id}&date=${date}`});
 };
 /**
  * 
- * @param {*} opts 
- * @param opts.center_id Vaccine Center id
- * @param opts.date Date to search
+ * @param center_id Vaccine Center id
+ * @param date Date to search
  * @returns Promise
  * @description Vaccination sessions by center for 7 days
  */
-CallHandler.findSessionByCenter = (opts)=>{
-	return CallHandler.call({path:`api/v2/appointment/sessions/public/calendarByCenter?center_id=${opts.center_id}&date=${opts.date}`});
+CallHandler.findSessionByCenter = (center_id,date)=>{
+	return CallHandler.call({path:`api/v2/appointment/sessions/public/calendarByCenter?center_id=${center_id}&date=${date}`});
 }
 
 export default  CallHandler ;
