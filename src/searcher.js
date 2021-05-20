@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CallHandler from './CallHandler'
 import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +31,8 @@ const Searcher = ({ handleClosed }) => {
     const [pincode, setPincode] = useState("");
     const [distance, setdistance] = useState("Any Distance");
     const [open, setOpen] = React.useState(false);
+		const [response,setResponse]=useState({sessions:[]});
+		const [PINerror,setPINerror]=useState('');
 
     const handleChange = (event) => {
         setdistance(event.target.value);
@@ -46,7 +49,21 @@ const Searcher = ({ handleClosed }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(pincode, distance);
-        handleClosed();
+				let today = new Date();
+				let dd = String(today.getDate()).padStart(2, '0');
+				let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+				let yyyy = today.getFullYear();
+
+				today = `${dd}/${mm}/${yyyy}`;
+				CallHandler.findCenterByPIN(pincode,today).then((res)=>{
+					setResponse(res);
+				}).catch((err) => {	
+						err.then(e=>{
+							setPINerror(e	.error);
+						})
+				});
+;
+       // handleClosed();
     };
 
     return (
@@ -58,9 +75,14 @@ const Searcher = ({ handleClosed }) => {
                     label="Zip"
                     variant="outlined"
                     required
-                    onChange={(e) => setPincode(e.target.value)}
+										error={PINerror !== ''}
+  									helperText={PINerror === '' ? '' : PINerror}
+                    onChange={(e) => {
+											setPINerror('');
+											setResponse({sessions:[]});
+											setPincode(e.target.value)}
+										}
                 />
-
                 {/* <InputLabel id="demo-controlled-open-select-label">Distance</InputLabel> */}
 
                 <Select
@@ -83,6 +105,13 @@ const Searcher = ({ handleClosed }) => {
 
                 <Button type="submit" variant="contained" style={{ background: "#007bff", color: "white" }}>Signup</Button>
             </form>
+						<div>	
+							{response.sessions.map((val,idx)=>{
+								 return (<ul>
+									 <li>{val.name}-{val.center_id}</li>
+									</ul>)
+							})}
+						</div>
         </div>
     );
 };
